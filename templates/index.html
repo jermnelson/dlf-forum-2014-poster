@@ -1,7 +1,133 @@
 {% extends 'base.html' %}
 
+{% block more_css %}
+<style>
+ .countdown {
+   font-size: 42pt;
+ }
+
+</style>
+{% endblock %}
+
 {% block main %}
- <h1>Using BIBFRAME, Flask, and Fedora4 as a Catalog Pull Platform</h1>
- <h2>Jeremy Nelson, Colorado College</h2>
+<div class="row">
+ <div class="col-md-12 page-header">
+   <div class="col-md-8">
+    <h1>Using BIBFRAME, Flask, and Fedora4 as a Catalog Pull Platform
+     <small>Jeremy Nelson, Colorado College</small></h1>
+   </div>
+   <div class="col-md-4">
+    <img src="{{ url_for('static', filename='img/DLF_logo.png') }}">
+    <h4 class="pull-right">DLF Forum 2014<br>Poster &amp; Lightning Talk<br>27th October 2014</h4>
+   </div>
+ </div>
+</div>
+<div class="row">
+ <div class="col-md-10">
+   <div id="presentation"></div>
+
+ </div>
+ <div class="col-md-2 well well-sm">
+  <div><span class="countdown" data-bind="style: {color: counterColor()}">:</span> <span class="countdown" 
+                                              data-bind="text: counter,
+                                                         style: {color: counterColor()}" 
+                                              ></span></div>
+  <div class="btn-group-vertical center-block">
+   <button type="button" class="btn btn-success"
+       data-bind="click: startPresentation">
+     <i class="glyphicon glyphicon-play"></i>
+     Start</button>
+   <button type="button" class="btn btn-default" data-toggle="modal" data-target="#aboutDlg">
+     About</button>
+   <a href="/references" class="btn btn-default">
+     References</a>
+
+  </div>
+ </div>
+</div>
+{% endblock %}
+
+
+{% block dialogs %}
+<div class="modal fade" id="aboutDlg" tabindex="-1" role="dialog" aria-labelledby="aboutDlgLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="aboutDlgLabel">About</h4>
+      </div>
+      <div class="modal-body">
+        <p class="lead">
+         This poster presentation was created by <a href="mailto:jeremy.nelson@coloradocollege.edu">Jeremy Nelson</a>, 
+         Metadata and Systems Librarian at Colorado College. 
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block more_js %}
+<script>
+ function PosterViewModel() {
+  var self = this;
+
+  
  
+  self.counter = ko.observable(60);
+  self.counterColor = ko.observable("green");
+ 
+  self.svgDraw = SVG('presentation').size(800, 600);
+
+
+  self.whatCatalogPullPlatform = function() {
+     //$('#presentation').empty();
+     var titleGroup = self.svgDraw.group();
+     titleGroup.add(self.svgDraw.text("What is a Pull Platform?").font({ size: 18 }).move(20,20));
+  }
+
+  self.bibframeLD = function() {
+    $('#presentation').empty();
+    var titleGroup = self.svgDraw.group();
+    titleGroup.add(self.svgDraw.text("BIBFRAME and Linked Data").font({ size: 18 }).move(20,20);
+
+  }
+
+  self.startPresentation = function() {
+   self.counter(60);
+   self.counterColor('green');
+      self.countdownTimer = setInterval(self.updateCounter, 1000); 
+  }
+
+  self.updateCounter = function() {
+   self.counter(self.counter() - 1);
+   
+   // Presentation time points
+   if(self.counter() >= 59) {
+     self.whatCatalogPullPlatform();
+   }
+
+   if(self.counter() == 45) {
+     self.bibframeLD();     
+   }
+
+   if(self.counter() <= 30 && self.counter() > 15) {
+     self.counterColor("rgb(255,201,14)");
+   }
+   if(self.counter() <= 15) {
+     self.counterColor("red");
+   }
+   if(self.counter() == 0) {
+    clearInterval(self.countdownTimer);
+
+   }   
+  }
+
+ }
+
+ ko.applyBindings(new PosterViewModel());
+</script>
 {% endblock %}
