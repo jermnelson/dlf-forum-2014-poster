@@ -2,15 +2,19 @@
 
 {% block more_css %}
 <style>
+ body {
+  background-color: rgb(35, 103, 162);
+ }
+
  .countdown {
    font-size: 42pt;
  }
-
 </style>
 {% endblock %}
 
 {% block main %}
-<div class="row">
+<div class="container" style="background-color: white">
+<div class="row" >
  <div class="col-md-12 page-header">
    <div class="col-md-8">
     <h1>Using BIBFRAME, Flask, and Fedora4 as a Catalog Pull Platform
@@ -44,6 +48,7 @@
 
   </div>
  </div>
+</div>
 </div>
 {% endblock %}
 
@@ -86,15 +91,24 @@
   self.whatCatalogPullPlatform = function() {
      //$('#presentation').empty();
      var titleGroup = self.svgDraw.group();
-     titleGroup.add(self.svgDraw.text("What is a Pull Platform?").font({ size: 18 }).move(20,20));
+     titleGroup.add(self.svgDraw.text("What is a Catalog Pull Platform?").font({ size: 48 }).move(20,20));
+     var explainGroup = self.svgDraw.group();
+     var cppVerbs = ["enables", "builds", "creates", "modifies"];
+     explainGroup.add(self.svgDraw.text("The Catalog Pull Platform:").font({ size: 36 }).x(20))
+     explainGroup.add(self.svgDraw.line(20, 85, 80, 85).stroke({ width: 2 }));
+     explainGroup.add(self.svgDraw.text("catalogs for libraries and other memory institutions").font({ size: 24 }).move(90, 60));
+     explainGroup.move(50,60);
+
   }
 
   self.bibframeLD = function() {
     $('#presentation').empty();
     var titleGroup = self.svgDraw.group();
-    titleGroup.add(self.svgDraw.text("BIBFRAME and Linked Data").font({ size: 18 }).move(20,20);
+    titleGroup.add(self.svgDraw.text("BIBFRAME and Linked Data").font({ size: 18 }).move(20,20));
 
   }
+
+
 
   self.startPresentation = function() {
    self.counter(60);
@@ -111,7 +125,7 @@
    }
 
    if(self.counter() == 45) {
-     self.bibframeLD();     
+     //self.bibframeLD();     
    }
 
    if(self.counter() <= 30 && self.counter() > 15) {

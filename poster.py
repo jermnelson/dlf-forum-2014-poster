@@ -20,6 +20,10 @@ from flask import Flask, render_template, abort
 
 poster = Flask(__name__)
 
+@poster.route("/references")
+def references():
+    return render_template("references.html")
+
 @poster.route("/")
 def home():
     return render_template("index.html")
