@@ -79,8 +79,6 @@
 <script>
  function PosterViewModel() {
   var self = this;
-
-  
  
   self.counter = ko.observable(60);
   self.counterColor = ko.observable("green");
@@ -93,22 +91,117 @@
      var titleGroup = self.svgDraw.group();
      titleGroup.add(self.svgDraw.text("What is a Catalog Pull Platform?").font({ size: 48 }).move(20,20));
      var explainGroup = self.svgDraw.group();
-     var cppVerbs = ["enables", "builds", "creates", "modifies"];
-     explainGroup.add(self.svgDraw.text("The Catalog Pull Platform:").font({ size: 36 }).x(20))
+     explainGroup.add(self.svgDraw.text("The Tutt Library Catalog Pull Platform:").font({ size: 36 }).x(20))
      explainGroup.add(self.svgDraw.line(20, 85, 80, 85).stroke({ width: 2 }));
-     explainGroup.add(self.svgDraw.text("catalogs for libraries and other memory institutions").font({ size: 24 }).move(90, 60));
+     explainGroup.add(self.svgDraw.text("catalogs for libraries and other cultural heritage institutions").font({ size: 24 }).move(90, 60));
      explainGroup.move(50,60);
+     var ypos = 110;
+     var enables = self.svgDraw.text("enables").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     var builds = self.svgDraw.text("builds").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     var creates = self.svgDraw.text("creates").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     var modifies = self.svgDraw.text("modifies").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     enables.move(50, ypos).show().animate(1000).after(function() {
+      enables.animate(2000).move(50, ypos+25).after(function() {
+        builds.move(70, ypos).show(); 
+        builds.animate(2000).move(70, ypos+50).after(function() {
+          creates.move(50, ypos).show();
+          creates.animate(2000).move(50, ypos+80).after(function() {
+            modifies.move(45, ypos).show().animate(2000).after(function() {
+              titleGroup.remove();
+              explainGroup.remove();
+              enables.remove();
+              builds.remove();
+              creates.remove();
+              modifies.remove(); 
+            });
+          });
+        });
+      });
+     });
 
-  }
+   }
 
   self.bibframeLD = function() {
-    $('#presentation').empty();
     var titleGroup = self.svgDraw.group();
-    titleGroup.add(self.svgDraw.text("BIBFRAME and Linked Data").font({ size: 18 }).move(20,20));
-
+    titleGroup.add(self.svgDraw.text("BIBFRAME and Linked Data").font({ size: 48 }).move(20,20));
+    var bibframe_desc = self.svgDraw.group()
+    bibframe_desc.add(self.svgDraw.image("{{ url_for('static', filename='img/bibframe-newlogo.jpg') }}"));
+    bibframe_desc.add(self.svgDraw.text("BIBFRAME is a new linked-data vocabulary").font({ size: 24 }).x(210));
+    bibframe_desc.add(self.svgDraw.text("sponsored by the Library of Congress to replace").font({ size: 24 }).move(210,36));
+    bibframe_desc.add(self.svgDraw.text("MARC21. Website and vocabulary available at ").font({ size: 24 }).move(210, 65));
+    bibframe_desc.add(self.svgDraw.text("http://bibframe.org/").font({ size: 24 }).fill({ color: "#0000FF"}).move(210, 94)); 
+    var bibframe_ld_example = self.svgDraw.group();
+    bibframe_ld_example.add(self.svgDraw.text("Example of a BIBFRAME Triple").font({ size: 36 }));
+    bibframe_ld_example.hide();
+    bibframe_desc.move(50, 75).animate(1000).after(function() {
+     bibframe_ld_example.move(bibframe_desc.x, 200).show().animate(2000).move(120, 230).after(
+      function() {
+       var bf_work_subject = self.svgDraw.group();
+       var subject_ellipse = self.svgDraw.ellipse(475, 75).opacity(0.3); 
+       bf_work_subject.add(subject_ellipse); 
+       bf_work_subject.add(self.svgDraw.text("Subject URI Node").font({ size: 18 }).fill({ color: "#FF0000" }).x(140));
+       bf_work_subject.add(self.svgDraw.text("http://catalog:8080/rest/bibframe/Work/54232d42650b8c2544a2a089").font({ size: 14, weight: 'bold' }).move(6, 35));
+       bf_work_subject.hide().move(25,300);
+       var bf_work_to_authAccessPt = self.svgDraw.group();
+       var bf_work_line = self.svgDraw.line(250, 80, 412, 100).stroke({ width: 3});
+       bf_work_to_authAccessPt.add(bf_work_line); 
+       bf_work_to_authAccessPt.move(25,300).hide()
+       var bf_authAccessPt = self.svgDraw.group();
+       var predicate_ellipse = self.svgDraw.ellipse(350, 75).opacity(0.3).fill({ color: "#FF0000"});
+       bf_authAccessPt.add(predicate_ellipse);
+       bf_authAccessPt.add(self.svgDraw.text("Predicate URI Node").font({ size: 18 }).fill({ color: "#009933" }).x(105));
+       bf_authAccessPt.add(self.svgDraw.text("http://bibframe.org/vocab/authorizedAccessPoint").font({ size: 14, weight: 'bold' }).move(6, 27));
+       bf_authAccessPt.hide().move(450, 375);
+       var bf_literal = self.svgDraw.group();
+       var object_ellipse = self.svgDraw.ellipse(225, 75).opacity(0.3).fill({ color: "#009933"});
+       bf_literal.add(object_ellipse);
+       bf_literal.add(self.svgDraw.text("Object Literal Node").font({ size: 18 }).fill({ color: "#777777"}).x(35));
+       bf_literal.add(self.svgDraw.text('"Medieval religious women"').font({ size: 14, weight: 'bold' }).move(20, 30));
+       bf_literal.hide().move(50, 450);
+       var bf_authAccessPt_to_literal = self.svgDraw.group();
+       bf_authAccessPt_to_literal.add(self.svgDraw.line(175, 50, 412, 15).stroke({ width: 3}));
+       bf_authAccessPt_to_literal.hide().move(60,410); 
+       bf_work_subject.show().animate(1000).after(function() {
+         bf_work_to_authAccessPt.show().animate(1000).after(function() {
+            bf_authAccessPt.show().animate(1000).after(function() {
+             bf_authAccessPt_to_literal.show().animate(1000).after(function() {
+               bf_literal.show().animate(2500).after(function() {
+                 titleGroup.remove();
+                 bibframe_desc.remove();        
+                 bibframe_ld_example.remove();
+                 bf_work_subject.remove();
+                 bf_work_to_authAccessPt.remove();
+                 bf_authAccessPt.remove();
+                 bf_literal.remove();
+                 bf_authAccessPt_to_literal.remove();
+               });          
+             });
+            });
+         });
+       });
+     });
+    });
   }
 
+  self.fedora4 = function() {
+   var titleGroup = self.svgDraw.group();
+   titleGroup.add(self.svgDraw.text("Fedora Commons Digital Repository" ).font({ size: 48 }).move(20,20));
+   var fedora_desc = self.svgDraw.group();
+   fedora_desc.add(self.svgDraw.image("{{ url_for('static', filename='img/fedora-commons-4-beta.png') }}").move(450, 80));
+   fedora_desc.show().animate(1000).after(function() {
+     var lines =  ["Version 4.0 Beta Released in June 2014", 
+                   "production version by the end of the",
+                   "year. Shifted from file-based metadata",
+                   "to RDF graphs."]
+     var description = self.svgDraw.text("").font({ size: 24 }).move(15, 50);
+     var text = "";
+     for(i in lines) {
+        text += lines[i] + "\n";
+        description.text(text); 
+     }
+   });
 
+  }
 
   self.startPresentation = function() {
    self.counter(60);
@@ -124,8 +217,13 @@
      self.whatCatalogPullPlatform();
    }
 
-   if(self.counter() == 45) {
-     //self.bibframeLD();     
+   if(self.counter() == 50) {
+     self.bibframeLD();     
+   }
+
+   if(self.counter() == 40) {
+     self.fedora4();
+
    }
 
    if(self.counter() <= 30 && self.counter() > 15) {
@@ -141,7 +239,7 @@
   }
 
  }
-
- ko.applyBindings(new PosterViewModel());
+ var poster_view_model = new PosterViewModel()
+ ko.applyBindings(poster_view_model);
 </script>
 {% endblock %}
