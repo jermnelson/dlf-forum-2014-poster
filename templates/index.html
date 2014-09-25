@@ -184,50 +184,49 @@
   }
 
   self.fedora4 = function() {
+   var slide = self.svgDraw.group();
    var titleGroup = self.svgDraw.group();
+   slide.add(titleGroup);
    titleGroup.add(self.svgDraw.text("Fedora Commons Digital Repository" ).font({ size: 48 }).move(20,20));
    var fedora_desc = self.svgDraw.group();
+   slide.add(fedora_desc)
    fedora_desc.add(self.svgDraw.image("{{ url_for('static', filename='img/fedora-commons-4-beta.png') }}").move(465, 80));
    fedora_desc.show().animate(1000).after(function() {
      var lines =  ["Version 4.0 Beta Released in June 2014", 
                    "production version by the end of the year"];
-     var features_lines = ["Metadata stored as RDF Graphs\n(not XML files)",
+     var features = ["Metadata stored as RDF Graphs\n(not XML files)",
                      "RESTful HTTP API for CRUD operations\non objects and properties",
                      "New support for Namespaces, Workspaces,\n& Transactions",
                      "Batch Operations, External Search, External Triplestores"];
-     var description = self.svgDraw.text(lines[0] + "\n" + lines[1]).font({ size: 24 }).move(20, 80).animate(1000).after(
+     var description = self.svgDraw.text(lines[0] + "\n" + lines[1]).font({ size: 24 });
+     slide.add(description);
+     description.move(20, 80).animate(1000).after(
       function() {
-        var features = self.svgDraw.group();
         var feature1 = self.svgDraw.group();
-        features.add(feature1);
+        slide.add(feature1);
         feature1.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
-        feature1.add(self.svgDraw.text(features_lines[0]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
+        feature1.add(self.svgDraw.text(features[0]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
         feature1.move(20, 150).animate(1500).scale(2,2).after(function() {
-           feature1.scale(1, 1).animate(1000).y(350);
+           feature1.scale(1, 1).animate(1000).y(290);
            var feature2 = self.svgDraw.group();
-           features.add(feature2);
+           slide.add(feature2);
            feature2.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
-           feature2.add(self.svgDraw.text(features_lines[1]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
+           feature2.add(self.svgDraw.text(features[1]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
            feature2.move(20, 150).animate(1500).scale(2,2).after(function() {
-            feature2.scale(1,1).animate(1000).y(300); 
+            feature2.scale(1,1).animate(1000).y(240); 
             var feature3 = self.svgDraw.group();
-            features.add(feature3);
+            slide.add(feature3);
             feature3.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
-            feature3.add(self.svgDraw.text(features_lines[2]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
+            feature3.add(self.svgDraw.text(features[2]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
             feature3.move(20, 150).animate(1500).scale(2,2).after(function() {
-              feature3.scale(1,1).animate(1000).y(250); 
+              feature3.scale(1,1).animate(1000).y(195); 
               var feature4 = self.svgDraw.group();
-              features.add(feature4);
+              slide.add(feature4);
               feature4.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
-              feature4.add(self.svgDraw.text(features_lines[3]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
+              feature4.add(self.svgDraw.text(features[3]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
               feature4.move(20, 150).animate(1500).scale(2,2).after(function() {
-                feature4.scale(1,1).animate(1000).y(225).after(function() {
-                   features.animate(2000, ">").y(-60).after(function() {
-                    features.remove();
-                    fedora_desc.remove()
-                    description.remove();
-                    titleGroup.remove();
-                   });
+                feature4.scale(1,1).animate(2000).y(195).after(function() {
+                  slide.remove();
                 });
               })
             }); 
