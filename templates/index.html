@@ -225,7 +225,7 @@
               feature4.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
               feature4.add(self.svgDraw.text(features[3]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
               feature4.move(20, 150).animate(1500).scale(2,2).after(function() {
-                feature4.scale(1,1).animate(2000).y(195).after(function() {
+                feature4.scale(1,1).animate(2000).y(155).after(function() {
                   slide.remove();
                 });
               })
@@ -234,6 +234,26 @@
         });
      });
    });
+
+  }
+
+  self.flaskAndFedora = function() {
+   var slide =  self.svgDraw.group();
+   var titleGroup = self.svgDraw.group();
+   slide.add(titleGroup);
+   titleGroup.add(self.svgDraw.text("Flask and Fedora 4" ).font({ size: 48 }).move(20,20));
+   var flask_intro = self.svgDraw.group();
+   flask_intro.add(self.svgDraw.image("{{ url_for('static', filename='img/flask-logo.png') }}").y(100));
+   flask_intro.add(self.svgDraw.text("Flask is a web microframework for Python").font({ size: 18 }).x(475));
+
+  }
+
+  self.MARCtoBibframeintoFedora4 = function() {
+   var slide =  self.svgDraw.group();
+   var titleGroup = self.svgDraw.group();
+   slide.add(titleGroup);
+   titleGroup.add(self.svgDraw.text("MARC to BIBFRAME" ).font({ size: 48 }).move(20,20));
+   
 
   }
 
@@ -257,8 +277,17 @@
 
    if(self.counter() == 40) {
      self.fedora4();
-
    }
+
+   if(self.counter() == 30) {
+     self.flaskAndFedora();
+   }
+
+
+   if(self.counter() == 20) {
+     self.MARCtoBibframeintoFedora4();
+   }
+
 
    if(self.counter() <= 30 && self.counter() > 15) {
      self.counterColor("rgb(255,201,14)");
