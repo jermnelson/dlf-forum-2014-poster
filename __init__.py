@@ -31,9 +31,10 @@ def home():
 def main():
     host = '0.0.0.0'
     port = 3030
-    poster.run(debug=True,
-               host=host,
-               port=port)
+    poster.run(
+        debug=True,
+        host=host,
+        port=port)
 
 if __name__ == '__main__':
     main()
