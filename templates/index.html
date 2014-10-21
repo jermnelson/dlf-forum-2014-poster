@@ -14,7 +14,7 @@
 
 {% block main %}
 <div class="container" style="background-color: white">
-<div class="row" >
+<header class="row web-view">
  <div class="col-md-12 page-header">
    <div class="col-md-8">
     <h1>Using BIBFRAME, Flask, and Fedora4 as a Catalog Pull Platform
@@ -25,13 +25,13 @@
     <h4 class="pull-right">DLF Forum 2014<br>Poster &amp; Lightning Talk<br>27th October 2014</h4>
    </div>
  </div>
-</div>
+</header>
 <div class="row">
- <div class="col-md-10">
+ <div class="col-md-10" id="presentation-panel">
    <div id="presentation"></div>
 
  </div>
- <div class="col-md-2 well well-sm">
+ <div class="col-md-2 well well-sm" id="presentation-widget">
   <div><span class="countdown" data-bind="style: {color: counterColor()}">:</span> <span class="countdown" 
                                               data-bind="text: counter,
                                                          style: {color: counterColor()}" 
@@ -41,6 +41,9 @@
        data-bind="click: startPresentation">
      <i class="glyphicon glyphicon-play"></i>
      Start</button>
+   <button type="button" class="btn btn-warning"
+      data-bind="click: posterView">
+     Poster View</button>
    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#aboutDlg">
      About</button>
    <a href="/references" class="btn btn-default">
@@ -85,35 +88,55 @@
  
   self.svgDraw = SVG('presentation').size(800, 600);
 
+  self.slide = self.svgDraw.group();
 
-  self.whatCatalogPullPlatform = function() {
-     //$('#presentation').empty();
-     var titleGroup = self.svgDraw.group();
-     titleGroup.add(self.svgDraw.text("What is a Catalog Pull Platform?").font({ size: 48 }).move(20,20));
-     var explainGroup = self.svgDraw.group();
-     explainGroup.add(self.svgDraw.text("The Tutt Library Catalog Pull Platform:").font({ size: 36 }).x(20))
-     explainGroup.add(self.svgDraw.line(20, 85, 80, 85).stroke({ width: 2 }));
-     explainGroup.add(self.svgDraw.text("catalogs for libraries and other cultural heritage institutions").font({ size: 24 }).move(90, 60));
+  self.posterView = function()  {
+   self.slide.clear();
+   $('#presentation-panel').removeClass('col-md-10');
+   $('#presentation-panel').addClass('col-md-12');
+   $('#presentation-widget').addClass('hidden');
+   self.svgDraw =  SVG('presentation').size(2592, 2592);
+   self.whatCatalogPullPlatform(self.svgDraw); 
+   var cppChildren = self.slide.children();
+   var cppPanel = self.svgDraw.group();
+   for(i in appChildren) {
+     appChildren.push(appChildren[i]);
+   }
+   
+
+  }
+
+  self.whatCatalogPullPlatform = function(svgDraw) {
+     var titleGroup = svgDraw.group();
+     console.log("In whatCatalogPullPlatform");
+     self.slide.add(titleGroup);
+     titleGroup.add(svgDraw.text("What is a Catalog Pull Platform?").font({ size: 48 }).move(20,20));
+     var explainGroup = svgDraw.group();
+     self.slide.add(explainGroup);
+     explainGroup.add(svgDraw.text("The Tutt Library Catalog Pull Platform:").font({ size: 36 }).x(20))
+     explainGroup.add(svgDraw.line(20, 85, 80, 85).stroke({ width: 2 }));
+     explainGroup.add(svgDraw.text("catalogs for libraries and other cultural heritage institutions").font({ size: 24 }).move(90, 60));
      explainGroup.move(50,60);
      var ypos = 110;
-     var enables = self.svgDraw.text("enables").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
-     var builds = self.svgDraw.text("builds").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
-     var creates = self.svgDraw.text("creates").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
-     var modifies = self.svgDraw.text("modifies").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     var enables = svgDraw.text("enables").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     self.slide.add(enables);
+     var builds = svgDraw.text("builds").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     self.slide.add(builds);
+     var creates = svgDraw.text("creates").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     self.slide.add(creates);
+     var modifies = svgDraw.text("modifies").font({ size: 24 }).fill( { color: "#ff0000" }).hide();
+     self.slide.add(modifies);
      enables.move(50, ypos).show().animate(1000).after(function() {
       enables.animate(2000).move(50, ypos+25).after(function() {
         builds.move(70, ypos).show(); 
         builds.animate(2000).move(70, ypos+50).after(function() {
+          var final_headline = svgDraw.text("Our intention -- Reclaim Our Catalog");
+          final_headline.font({ size: 32 }).move(60, 140);
+          self.slide.add(final_headline);
           creates.move(50, ypos).show();
           creates.animate(2000).move(50, ypos+80).after(function() {
             modifies.move(45, ypos).show().animate(2000).after(function() {
-              titleGroup.remove();
-              explainGroup.remove();
-              enables.remove();
-              builds.remove();
-              creates.remove();
-              modifies.remove(); 
-            });
+                          });
           });
         });
       });
@@ -124,41 +147,49 @@
   self.bibframeLD = function() {
     var titleGroup = self.svgDraw.group();
     titleGroup.add(self.svgDraw.text("BIBFRAME and Linked Data").font({ size: 48 }).move(20,20));
+    self.slide.add(titleGroup);
     var bibframe_desc = self.svgDraw.group()
+    self.slide.add(bibframe_desc);
     bibframe_desc.add(self.svgDraw.image("{{ url_for('static', filename='img/bibframe-newlogo.jpg') }}"));
     bibframe_desc.add(self.svgDraw.text("BIBFRAME is a new linked-data vocabulary").font({ size: 24 }).x(210));
     bibframe_desc.add(self.svgDraw.text("sponsored by the Library of Congress to replace").font({ size: 24 }).move(210,36));
     bibframe_desc.add(self.svgDraw.text("MARC21. Website and vocabulary available at ").font({ size: 24 }).move(210, 65));
     bibframe_desc.add(self.svgDraw.text("http://bibframe.org/").font({ size: 24 }).fill({ color: "#0000FF"}).move(210, 94)); 
     var bibframe_ld_example = self.svgDraw.group();
+    self.slide.add(bibframe_ld_example);
     bibframe_ld_example.add(self.svgDraw.text("Example of a BIBFRAME Triple").font({ size: 36 }));
     bibframe_ld_example.hide();
     bibframe_desc.move(50, 75).animate(1000).after(function() {
      bibframe_ld_example.move(bibframe_desc.x, 200).show().animate(2000).move(120, 230).after(
       function() {
        var bf_work_subject = self.svgDraw.group();
+       self.slide.add(bf_work_subject);
        var subject_ellipse = self.svgDraw.ellipse(475, 75).opacity(0.3); 
        bf_work_subject.add(subject_ellipse); 
        bf_work_subject.add(self.svgDraw.text("Subject URI Node").font({ size: 18 }).fill({ color: "#FF0000" }).x(140));
        bf_work_subject.add(self.svgDraw.text("http://catalog:8080/rest/bibframe/Work/54232d42650b8c2544a2a089").font({ size: 14, weight: 'bold' }).move(6, 35));
        bf_work_subject.hide().move(25,300);
        var bf_work_to_authAccessPt = self.svgDraw.group();
+       self.slide.add(bf_work_to_authAccessPt);
        var bf_work_line = self.svgDraw.line(250, 80, 412, 100).stroke({ width: 3});
        bf_work_to_authAccessPt.add(bf_work_line); 
        bf_work_to_authAccessPt.move(25,300).hide()
        var bf_authAccessPt = self.svgDraw.group();
+       self.slide.add(bf_authAccessPt);
        var predicate_ellipse = self.svgDraw.ellipse(350, 75).opacity(0.3).fill({ color: "#FF0000"});
        bf_authAccessPt.add(predicate_ellipse);
        bf_authAccessPt.add(self.svgDraw.text("Predicate URI Node").font({ size: 18 }).fill({ color: "#009933" }).x(105));
        bf_authAccessPt.add(self.svgDraw.text("http://bibframe.org/vocab/authorizedAccessPoint").font({ size: 14, weight: 'bold' }).move(6, 27));
        bf_authAccessPt.hide().move(450, 375);
        var bf_literal = self.svgDraw.group();
+       self.slide.add(bf_literal);
        var object_ellipse = self.svgDraw.ellipse(225, 75).opacity(0.3).fill({ color: "#009933"});
        bf_literal.add(object_ellipse);
        bf_literal.add(self.svgDraw.text("Object Literal Node").font({ size: 18 }).fill({ color: "#777777"}).x(35));
        bf_literal.add(self.svgDraw.text('"Medieval religious women"').font({ size: 14, weight: 'bold' }).move(20, 30));
        bf_literal.hide().move(50, 450);
        var bf_authAccessPt_to_literal = self.svgDraw.group();
+       self.slide.add(bf_authAccessPt_to_literal);
        bf_authAccessPt_to_literal.add(self.svgDraw.line(175, 50, 412, 15).stroke({ width: 3}));
        bf_authAccessPt_to_literal.hide().move(60,410); 
        bf_work_subject.show().animate(1000).after(function() {
@@ -166,14 +197,6 @@
             bf_authAccessPt.show().animate(1000).after(function() {
              bf_authAccessPt_to_literal.show().animate(1000).after(function() {
                bf_literal.show().animate(2500).after(function() {
-                 titleGroup.remove();
-                 bibframe_desc.remove();        
-                 bibframe_ld_example.remove();
-                 bf_work_subject.remove();
-                 bf_work_to_authAccessPt.remove();
-                 bf_authAccessPt.remove();
-                 bf_literal.remove();
-                 bf_authAccessPt_to_literal.remove();
                });          
              });
             });
@@ -184,12 +207,11 @@
   }
 
   self.fedora4 = function() {
-   var slide = self.svgDraw.group();
    var titleGroup = self.svgDraw.group();
-   slide.add(titleGroup);
+   self.slide.add(titleGroup);
    titleGroup.add(self.svgDraw.text("Fedora Commons Digital Repository" ).font({ size: 48 }).move(20,20));
    var fedora_desc = self.svgDraw.group();
-   slide.add(fedora_desc)
+   self.slide.add(fedora_desc)
    fedora_desc.add(self.svgDraw.image("{{ url_for('static', filename='img/fedora-commons-4-beta.png') }}").move(465, 80));
    fedora_desc.show().animate(1000).after(function() {
      var lines =  ["Version 4.0 Beta Released in June 2014", 
@@ -199,35 +221,34 @@
                      "New support for Namespaces, Workspaces,\n& Transactions",
                      "Batch Operations, External Search, External Triplestores"];
      var description = self.svgDraw.text(lines[0] + "\n" + lines[1]).font({ size: 24 });
-     slide.add(description);
+     self.slide.add(description);
      description.move(20, 80).animate(1000).after(
       function() {
         var feature1 = self.svgDraw.group();
-        slide.add(feature1);
+        self.slide.add(feature1);
         feature1.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
         feature1.add(self.svgDraw.text(features[0]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
         feature1.move(20, 150).animate(1500).scale(2,2).after(function() {
            feature1.scale(1, 1).animate(1000).y(290);
            var feature2 = self.svgDraw.group();
-           slide.add(feature2);
+           self.slide.add(feature2);
            feature2.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
            feature2.add(self.svgDraw.text(features[1]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
            feature2.move(20, 150).animate(1500).scale(2,2).after(function() {
             feature2.scale(1,1).animate(1000).y(240); 
             var feature3 = self.svgDraw.group();
-            slide.add(feature3);
+            self.slide.add(feature3);
             feature3.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
             feature3.add(self.svgDraw.text(features[2]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
             feature3.move(20, 150).animate(1500).scale(2,2).after(function() {
               feature3.scale(1,1).animate(1000).y(195); 
               var feature4 = self.svgDraw.group();
-              slide.add(feature4);
+              self.slide.add(feature4);
               feature4.add(self.svgDraw.circle(10).fill({ color: '#FF1111'}).y(10));
               feature4.add(self.svgDraw.text(features[3]).font({ size: 18 }).fill({ color: '#FF1111'}).x(15));
               feature4.move(20, 150).animate(1500).scale(2,2).after(function() {
                 feature4.scale(1,1).animate(2000).y(155).after(function() {
-                  slide.remove();
-                });
+                                  });
               })
             }); 
            });
@@ -238,14 +259,42 @@
   }
 
   self.flaskAndFedora = function() {
-   var slide =  self.svgDraw.group();
    var titleGroup = self.svgDraw.group();
-   slide.add(titleGroup);
+   self.slide.add(titleGroup);
    titleGroup.add(self.svgDraw.text("Flask and Fedora 4" ).font({ size: 48 }).move(20,20));
    var flask_intro = self.svgDraw.group();
-   flask_intro.add(self.svgDraw.image("{{ url_for('static', filename='img/flask-logo.png') }}").y(100));
-   flask_intro.add(self.svgDraw.text("Flask is a web microframework for Python").font({ size: 18 }).x(475));
+   self.slide.add(flask_intro);
+   var flask_img = self.svgDraw.image("{{ url_for('static', filename='img/flask-logo.png') }}");
+   flask_intro.add(flask_img.move(20, 150));
+   flask_img.animate().scale(0.5,0.5).after(function() {
+      var flask_text = self.svgDraw.text("Flask is a web microframework for Python").font({ size: 22 });
+      flask_intro.add(flask_text.move(155, 170));
+      flask_text.animate(3000).dmove(80, -100).after(function() {
+        var flask_desc = self.svgDraw.text(function(add) {
+          add.tspan("Flask applications typically are small and lightweight").newLine()
+          add.tspan("Additional functionality is added through Flask Extensions").newLine()
+        });
+        flask_intro.add(flask_desc);
+        flask_desc.font({ size: 16, weight: 'bold' }).fill({ color: '#0000FF' }).move(240, 110);
+        var fedora4_img = self.svgDraw.image("{{ url_for('static', filename='img/fedora-commons-4-beta.png') }}");
+        self.slide.add(fedora4_img);
+        fedora4_img.move(40, 280).back();
+        fedora4_img.animate(3000).dmove(375, -180).after(function() {
+          fedora4_img.back();
+          flask_text.text("Flask-FedoraCommons Extension");
+          flask_desc.text(function(add) {
+            add.tspan("Open source project started in 2013 for Fedora 3.7.x").newLine()
+            add.tspan("Updated to Fedora 4 using Python 3 in 2014").newLine()
+            add.tspan("Repository available at:").newLine()
+            add.tspan("https://github.com/jermnelson/flask-fedora-commons/").fill({ color: "#FF00FF" }).newLine()
+          });
+          fedora4_img.animate(3000).dmove(150, -100).after(function() {
+            self.slide.add(fedora4_img);
+          });
 
+        });
+      });
+   });
   }
 
   self.MARCtoBibframeintoFedora4 = function() {
@@ -267,24 +316,30 @@
    self.counter(self.counter() - 1);
    
    // Presentation time points
-   if(self.counter() >= 59) {
-     self.whatCatalogPullPlatform();
+   if(self.counter() >= 59) { 
+     self.slide.clear();
+     self.whatCatalogPullPlatform(self.svgDraw);
+
    }
 
    if(self.counter() == 50) {
+     self.slide.clear();
      self.bibframeLD();     
    }
 
    if(self.counter() == 40) {
+     self.slide.clear();
      self.fedora4();
    }
 
    if(self.counter() == 30) {
+     self.slide.clear();
      self.flaskAndFedora();
    }
 
 
    if(self.counter() == 20) {
+     self.slide.clear();
      self.MARCtoBibframeintoFedora4();
    }
 
