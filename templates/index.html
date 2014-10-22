@@ -96,21 +96,15 @@
    $('#presentation-panel').addClass('col-md-12');
    $('#presentation-widget').addClass('hidden');
    self.svgDraw =  SVG('presentation').size(2592, 2592);
-   self.whatCatalogPullPlatform(self.svgDraw); 
-   var cppChildren = self.slide.children();
-   var cppPanel = self.svgDraw.group();
-   for(i in appChildren) {
-     appChildren.push(appChildren[i]);
-   }
-   
-
+   self.slides[0].show();
   }
 
   self.whatCatalogPullPlatform = function(svgDraw) {
      var titleGroup = svgDraw.group();
      console.log("In whatCatalogPullPlatform");
      self.slide.add(titleGroup);
-     titleGroup.add(svgDraw.text("What is a Catalog Pull Platform?").font({ size: 48 }).move(20,20));
+     var title = svgDraw.text("What is a Catalog Pull Platform?");
+     titleGroup.add(title.font({ size: 48 }).move(20,20));
      var explainGroup = svgDraw.group();
      self.slide.add(explainGroup);
      explainGroup.add(svgDraw.text("The Tutt Library Catalog Pull Platform:").font({ size: 36 }).x(20))
@@ -130,12 +124,12 @@
       enables.animate(2000).move(50, ypos+25).after(function() {
         builds.move(70, ypos).show(); 
         builds.animate(2000).move(70, ypos+50).after(function() {
-          var final_headline = svgDraw.text("Our intention -- Reclaim Our Catalog");
-          final_headline.font({ size: 32 }).move(60, 140);
-          self.slide.add(final_headline);
+//          title.font({ size: 32, family: 'Helvetica' }).move(180, 140);
           creates.move(50, ypos).show();
           creates.animate(2000).move(50, ypos+80).after(function() {
             modifies.move(45, ypos).show().animate(2000).after(function() {
+              title.text("Reclaiming the Catalog");
+
                           });
           });
         });
@@ -274,6 +268,7 @@
           add.tspan("Flask applications typically are small and lightweight").newLine()
           add.tspan("Additional functionality is added through Flask Extensions").newLine()
         });
+        flask_desc.build(true);
         flask_intro.add(flask_desc);
         flask_desc.font({ size: 16, weight: 'bold' }).fill({ color: '#0000FF' }).move(240, 110);
         var fedora4_img = self.svgDraw.image("{{ url_for('static', filename='img/fedora-commons-4-beta.png') }}");
@@ -282,12 +277,10 @@
         fedora4_img.animate(3000).dmove(375, -180).after(function() {
           fedora4_img.back();
           flask_text.text("Flask-FedoraCommons Extension");
-          flask_desc.text(function(add) {
-            add.tspan("Open source project started in 2013 for Fedora 3.7.x").newLine()
-            add.tspan("Updated to Fedora 4 using Python 3 in 2014").newLine()
-            add.tspan("Repository available at:").newLine()
-            add.tspan("https://github.com/jermnelson/flask-fedora-commons/").fill({ color: "#FF00FF" }).newLine()
-          });
+          flask_desc.tspan("Open source project started in 2013 for Fedora 3.7.x").newLine();
+          flask_desc.tspan("Updated to Fedora 4 using Python 3 in 2014").newLine();
+          flask_desc.tspan("Repository available at:").newLine();
+          flask_desc.tspan("https://github.com/jermnelson/flask-fedora-commons/").fill({ color: "#FF00FF" }).newLine();
           fedora4_img.animate(3000).dmove(150, -100).after(function() {
             self.slide.add(fedora4_img);
           });
@@ -298,11 +291,97 @@
   }
 
   self.MARCtoBibframeintoFedora4 = function() {
-   var slide =  self.svgDraw.group();
    var titleGroup = self.svgDraw.group();
-   slide.add(titleGroup);
-   titleGroup.add(self.svgDraw.text("MARC to BIBFRAME" ).font({ size: 48 }).move(20,20));
+   self.slide.add(titleGroup);
+   var title = self.svgDraw.text("MARC-to-BIBFRAME into Fedora" );
+   title.font({ size: 48 }).move(20,20);
+   titleGroup.add(title);
+   var info = self.svgDraw.group();
+   self.slide.add(info);
+   var description = self.svgDraw.text(function(add) {
+     add.tspan("Workflow for transforming MARC21 records").newLine()
+     add.tspan("Step 1. Extracting records from legacy ILS").newLine()
+   });
+   description.font({ size: 18 });
+   description.build(true);
+   info.add(description);
+   info.move(25, 60);
+   var animation = self.svgDraw.group();
+   var serverIcon = self.svgDraw.group();
+   serverIcon.add(self.svgDraw.image("{{ url_for('static', filename='img/Home-Server-icon.png') }}"));
+   serverIcon.add(self.svgDraw.text("Hosted ILS").move(15, 100));
+   animation.add(serverIcon);
+   serverIcon.move(480, 110);
+   var marc21 = self.svgDraw.image("{{ url_for('static', filename='img/marc21-icon.gif') }}");
+   animation.add(marc21);
+   marc21.scale(0.6, 0.6).move(270, 130);
+   marc21.animate(3000).dx(-200).after(function() {
+     var fedoraRepo = self.svgDraw.group();
+     fedoraRepo.add(self.svgDraw.image("{{ url_for('static', filename='img/fedora4-repo.png') }}"));
+     fedoraRepo.add(self.svgDraw.text("Fedora4 Repository").move(5, 100));
+     fedoraRepo.move(480, 220);
+     description.tspan("Step 2. MARC21 records ingested into Fedora4").newLine();
+     marc21clone = marc21.clone();
+     marc21clone.dx(210);
+     self.slide.add(marc21clone);
+     marc21clone.move(70, 80).animate(3000).move(470, 220).after(function() {
+       serverIcon.hide();
+       description.tspan("Step 3. MARC21 records converted to MARCXML").newLine();
+       marc21.hide();
+       var marcXML = self.svgDraw.image("{{ url_for('static', filename='img/marc-xml.png') }}");
+       self.slide.add(marcXML);
+       marcXML.move(240, 130);
+       var xquery = self.svgDraw.text("XQuery Conversion").font({ size: 20 }).fill({ color: '#A0A0A0' });
+       self.slide.add(xquery);
+       xquery.hide().move(250, 250);
+       marcXML.animate(2000).dy(40).after(function() {
+        marc21clone.hide()
+        description.tspan("Step 4. MARC XML is converted to BIBFRAME RDF XML").newLine()
+        description.tspan("    through LOC's marc2bibframe XQuery utility").newLine()
+        xquery.show();
+        marcXML.animate(2000).dmove(40, 80).after(function() {
+         var bfRDF = self.svgDraw.group();
+         bfRDF.add(self.svgDraw.rect(110, 90).stroke({ width: 1 }).fill({ color: '#FFFFFF'}));
+         bfRDF.add(self.svgDraw.text("BIBFRAME RDF").move(5, 10));
+         bfRDF.move(300, 250);
+         marcXML.hide();
+         bfRDF.animate(2000).dmove(40, 40).after(function() { 
+          xquery.hide(); 
+          description.tspan("Step 5. BIBFRAME resource graphs extracted").newLine();
+          description.tspan("  and ingested into Fedora4").newLine();
+          bfRDF.backward();
+          fedoraRepo.backward();
+          var person = self.svgDraw.group();
+          self.slide.add(person);
+          person.add(self.svgDraw.image("{{ url_for('static', filename='img/personAuthority.png') }}"));
+          person.add(self.svgDraw.text("bf:Person RDF").move(5, 100));
+          person.move(300, 300).animate(1000).dx(200).after(function() { 
+            person.animate(1000).dy(-100).after(function() { 
+              person.dx(65).animate(1000).scale(0.6, 0.6) });
+          });
+          var work = self.svgDraw.group();
+          self.slide.add(work);
+          work.add(self.svgDraw.image("{{ url_for('static', filename='img/Work.png') }}"));
+          work.add(self.svgDraw.text("bf:Work RDF").move(5, 100));
+          work.move(300, 400).animate(1000).dx(200).after(function() { 
+            work.animate(1000).dy(-100).after(function() { 
+              work.dx(120).animate(1000).scale(0.6, 0.6) });
+          });
+ 
+         });
+       });
+      });
+    });
+  });    
+  
    
+   
+
+  }
+
+  self.finalThoughts = function() {
+
+
 
   }
 
@@ -342,6 +421,12 @@
      self.slide.clear();
      self.MARCtoBibframeintoFedora4();
    }
+
+   if(self.counter() == 10) {
+     self.slide.clear();
+     self.finalThoughts();
+   }
+
 
 
    if(self.counter() <= 30 && self.counter() > 15) {
