@@ -41,9 +41,9 @@
        data-bind="click: startPresentation">
      <i class="glyphicon glyphicon-play"></i>
      Start</button>
-   <button type="button" class="btn btn-warning"
-      data-bind="click: posterView">
-     Poster View</button>
+   <a type="button" class="btn btn-warning" href="{{ url_for('static', filename='pdf/poster.pdf') }}">
+     <i class="glyphicon glyphicon-download"?></i>
+     Poster PDF</a>
    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#aboutDlg">
      About</button>
    <a href="/references" class="btn btn-default">
@@ -282,7 +282,6 @@
           flask_desc.tspan("Repository available at:").newLine();
           flask_desc.tspan("https://github.com/jermnelson/flask-fedora-commons/").fill({ color: "#FF00FF" }).newLine();
           fedora4_img.animate(3000).dmove(150, -100).after(function() {
-            self.slide.add(fedora4_img);
           });
 
         });
@@ -343,8 +342,9 @@
         marcXML.animate(2000).dmove(40, 80).after(function() {
          var bfRDF = self.svgDraw.group();
          self.slide.add(bfRDF);
-         bfRDF.add(self.svgDraw.rect(110, 90).stroke({ width: 1 }).fill({ color: '#FFFFFF'}));
-         bfRDF.add(self.svgDraw.text("BIBFRAME RDF").move(5, 10));
+         // bfRDF.add(self.svgDraw.rect(110, 90).stroke({ width: 1 }).fill({ color: '#FFFFFF'}));
+         bfRDF.add(self.svgDraw.image("{{ url_for('static', filename='img/bibframe-newlogo.jpg') }}").scale(0.7, 0.7));
+         bfRDF.add(self.svgDraw.text("RDF-XML File").move(5, 50));
          bfRDF.move(300, 250);
          marcXML.hide();
          bfRDF.animate(2000).dmove(40, 40).after(function() { 
@@ -388,14 +388,20 @@
     self.thought.animate(1000).move(25, 100).after(function() {;
      self.thought.text("Catalog shifts from system to platform");
      self.thought.animate(1000).scale(1.5, 1.5).after(function() {
-       self.thought.text("Motto: Reclaim your Catalog!");
+       self.thought.text("Reclaim your Catalog!");
        self.thought.animate(1000).dx(20).after(function() {
-         self.thought.text(function(add) {
-            add.tspan("Thank-you!").fill({ color: "#0000FF" }).newLine()
-            add.tspan("Jeremy Nelson").font({ size: 22 }).fill({ color: '#FFFFFF' }).newLine()
-            add.tspan("jeremy.nelson@coloradocollege.edu").font({ size: 22 }).fill({ color: '#FFFFFF' }).newLine()
-            add.tspan("twitter: @jermnelson").font({ size: 22}).fill({ color: '#FFFFFF' }).newLine()
+         self.thought.text("Thank-you!");
+         self.thought.dx(150);
+         var info = self.svgDraw.text(function(add) {
+            add.tspan("Jeremy Nelson").fill({ color: '#000000' }).newLine()
+            add.tspan("Metadata and Systems Librarian").fill({ color: '#000000' }).newLine()
+            add.tspan("Colorado College").fill({ color: '#D8B343' }).newLine()
+            add.tspan("email: jeremy.nelson@coloradocollege.edu").newLine()
+            add.tspan("twitter: @jermnelson").newLine()
           });
+         info.font({ size: 18 }).fill({ color: '#0000FF' });
+         info.move(self.thought.x()+120, 250);
+         self.slide.add(info);
        });
      });
     });
