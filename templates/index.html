@@ -315,8 +315,9 @@
    var marc21 = self.svgDraw.image("{{ url_for('static', filename='img/marc21-icon.gif') }}");
    animation.add(marc21);
    marc21.scale(0.6, 0.6).move(270, 130);
-   marc21.animate(3000).dx(-200).after(function() {
+   marc21.animate(2000).dx(-200).after(function() {
      var fedoraRepo = self.svgDraw.group();
+     self.slide.add(fedoraRepo);
      fedoraRepo.add(self.svgDraw.image("{{ url_for('static', filename='img/fedora4-repo.png') }}"));
      fedoraRepo.add(self.svgDraw.text("Fedora4 Repository").move(5, 100));
      fedoraRepo.move(480, 220);
@@ -324,7 +325,7 @@
      marc21clone = marc21.clone();
      marc21clone.dx(210);
      self.slide.add(marc21clone);
-     marc21clone.move(70, 80).animate(3000).move(470, 220).after(function() {
+     marc21clone.move(70, 80).animate(2000).move(470, 220).after(function() {
        serverIcon.hide();
        description.tspan("Step 3. MARC21 records converted to MARCXML").newLine();
        marc21.hide();
@@ -341,6 +342,7 @@
         xquery.show();
         marcXML.animate(2000).dmove(40, 80).after(function() {
          var bfRDF = self.svgDraw.group();
+         self.slide.add(bfRDF);
          bfRDF.add(self.svgDraw.rect(110, 90).stroke({ width: 1 }).fill({ color: '#FFFFFF'}));
          bfRDF.add(self.svgDraw.text("BIBFRAME RDF").move(5, 10));
          bfRDF.move(300, 250);
@@ -380,8 +382,23 @@
   }
 
   self.finalThoughts = function() {
-
-
+    self.thought = self.svgDraw.text('Functionality is "pulled" from community requirements');
+    self.thought.font({ size: 36, family: 'Sans-serif'});
+    self.slide.add(self.thought);
+    self.thought.animate(1000).move(25, 100).after(function() {;
+     self.thought.text("Catalog shifts from system to platform");
+     self.thought.animate(1000).scale(1.5, 1.5).after(function() {
+       self.thought.text("Motto: Reclaim your Catalog!");
+       self.thought.animate(1000).dx(20).after(function() {
+         self.thought.text(function(add) {
+            add.tspan("Thank-you!").fill({ color: "#0000FF" }).newLine()
+            add.tspan("Jeremy Nelson").font({ size: 22 }).fill({ color: '#FFFFFF' }).newLine()
+            add.tspan("jeremy.nelson@coloradocollege.edu").font({ size: 22 }).fill({ color: '#FFFFFF' }).newLine()
+            add.tspan("twitter: @jermnelson").font({ size: 22}).fill({ color: '#FFFFFF' }).newLine()
+          });
+       });
+     });
+    });
 
   }
 
@@ -422,7 +439,7 @@
      self.MARCtoBibframeintoFedora4();
    }
 
-   if(self.counter() == 10) {
+   if(self.counter() == 6) {
      self.slide.clear();
      self.finalThoughts();
    }
