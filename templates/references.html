@@ -1,9 +1,31 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<div class="row">
-  <div class="col-md-8">
-   <h2>References</h2>
-  </div>
+<div class="container" style="background-color: white">
+ {% include 'header.html' %}
+ <div class="row">
+   <div class="col-md-8 col-md-offset-1">
+    <h2>References</h2>
+   </div>
+ </div>
+ <ol class="lead">
+   <li><a href="http://bibframe.org">bibframe.org</a> Main website for the Library of 
+   Congress BIBFRAME vocabulary.</li>
+   <li><a href="http://fedora-commons.org/">Fedora Commons</a> Open-source digital 
+   repository software used as the backend for popular digital repository front-end
+   frameworks like <a href="#">Islandora</a> and <a href="#">Hydra</a>. 
+   </li>
+   <li><a href="http://pocco.flask.org">Flask</a> Python web microframework</a></li>
+   <li><a href="https://github.com/jermnelson/Flask-FedoraCommons">Flask-FedoraCommons</a>
+   Flask extension provides a Python wrapper around a Fedora Commons 4 repository.</li>
+   <li><a href="http://catalog.coloradocollege.edu">New TIGER Catalog</a>, demonstration
+   pilot catalog of Colorado College's current MARC collections based on the current bibliographic 
+   research being at the Tutt Library. Source code repository available at 
+   <a href="https://github.com/Tutt-Library/tiger-catalog">https://github.com/Tutt-Library/tiger-catalog</a>
+   </li>
+   <li><a href="https://github.com/jermnelson/schema-org-editor">Schema.org Web Editor</a> - A simple,
+   Flask based Web editor for the Schema.org RDF vocabulary that allows triples to be applied to any new
+   or existing Fedora 4 objects.</li>
+ </ol>
 </div>
 {% endblock %}

@@ -2,9 +2,6 @@
 
 {% block more_css %}
 <style>
- body {
-  background-color: rgb(35, 103, 162);
- }
 
  .countdown {
    font-size: 42pt;
@@ -14,18 +11,7 @@
 
 {% block main %}
 <div class="container" style="background-color: white">
-<header class="row web-view">
- <div class="col-md-12 page-header">
-   <div class="col-md-8">
-    <h1>Using BIBFRAME, Flask, and Fedora4 as a Catalog Pull Platform
-     <small>Jeremy Nelson, Colorado College</small></h1>
-   </div>
-   <div class="col-md-4">
-    <img src="{{ url_for('static', filename='img/DLF_logo.png') }}">
-    <h4 class="pull-right">DLF Forum 2014<br>Poster &amp; Lightning Talk<br>27th October 2014</h4>
-   </div>
- </div>
-</header>
+{% include 'header.html' %}
 <div class="row">
  <div class="col-md-10" id="presentation-panel">
    <div id="presentation"></div>
@@ -62,13 +48,25 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="aboutDlgLabel">About</h4>
+        <h4 class="modal-title" id="aboutDlgLabel">About this Presentation</h4>
       </div>
       <div class="modal-body">
         <p class="lead">
          This poster presentation was created by <a href="mailto:jeremy.nelson@coloradocollege.edu">Jeremy Nelson</a>, 
-         Metadata and Systems Librarian at Colorado College. 
+         Metadata and Systems Librarian at Colorado College. All content is licensed under 
+         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>
         </p>
+        <p class="lead">
+         Presentation source code available on github at 
+         <a href="https://github.com/jermnelson/dlf-forum-2014-poster">https://github.com/jermnelson/dlf-forum-2014-poster</a>
+         and uses the following open-source projects:
+        </p>
+        <ul class="lead">
+         <li><a href="http://getbootstrap.com">Bootstrap</a></li>
+         <li><a href="http://flask.pocoo.org/">Flask</a></li>
+         <li><a href="http://knockoutjs.com/">Knockoutjs</a></li>
+         <li><a href="http://svgjs.com/">SVG.js</a></li>
+        </ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -101,7 +99,6 @@
 
   self.whatCatalogPullPlatform = function(svgDraw) {
      var titleGroup = svgDraw.group();
-     console.log("In whatCatalogPullPlatform");
      self.slide.add(titleGroup);
      var title = svgDraw.text("What is a Catalog Pull Platform?");
      titleGroup.add(title.font({ size: 48 }).move(20,20));
@@ -124,7 +121,6 @@
       enables.animate(2000).move(50, ypos+25).after(function() {
         builds.move(70, ypos).show(); 
         builds.animate(2000).move(70, ypos+50).after(function() {
-//          title.font({ size: 32, family: 'Helvetica' }).move(180, 140);
           creates.move(50, ypos).show();
           creates.animate(2000).move(50, ypos+80).after(function() {
             modifies.move(45, ypos).show().animate(2000).after(function() {
@@ -299,7 +295,7 @@
    self.slide.add(info);
    var description = self.svgDraw.text(function(add) {
      add.tspan("Workflow for transforming MARC21 records").newLine()
-     add.tspan("Step 1. Extracting records from legacy ILS").newLine()
+     add.tspan("Step 1. Extract records from legacy ILS").newLine()
    });
    description.font({ size: 18 });
    description.build(true);
@@ -322,21 +318,33 @@
      fedoraRepo.move(480, 220);
      description.tspan("Step 2. MARC21 records ingested into Fedora4").newLine();
      marc21clone = marc21.clone();
-     marc21clone.dx(210);
      self.slide.add(marc21clone);
-     marc21clone.move(70, 80).animate(2000).move(470, 220).after(function() {
+     marc21clone.move(160, 80).animate(2000).move(470, 220).after(function() {
+       marc21clone.backward();
        serverIcon.hide();
-       description.tspan("Step 3. MARC21 records converted to MARCXML").newLine();
+       description.tspan("Step 3. Fedora MARC objects serialized as JSON-LD\n and indexed into Elasticsearch").newLine(); 
+       var elasticSearch = self.svgDraw.group();
+       self.slide.add(elasticSearch);
+       elasticSearch.add(self.svgDraw.rect(130, 50).fill({ color: '#00FF22'}));
+       elasticSearch.add(self.svgDraw.text("Elasticsearch").font({ size: 22 }).y(20));
+       var json_ld = self.svgDraw.image("{{ url_for('static', filename='img/json-ld-logo-64.png') }}");
+       json_ld.hide();
+       elasticSearch.move(480, 425);
+       json_ld.move(480, 220).show();
+       json_ld.animate(2000).dy(200);
        marc21.hide();
        var marcXML = self.svgDraw.image("{{ url_for('static', filename='img/marc-xml.png') }}");
        self.slide.add(marcXML);
        marcXML.move(240, 130);
-       var xquery = self.svgDraw.text("XQuery Conversion").font({ size: 20 }).fill({ color: '#A0A0A0' });
+       var xquery = self.svgDraw.group()
+       xquery.add(self.svgDraw.text("XQuery Conversion").font({ size: 20 }).fill({ color: '#A0A0A0' }));
+       xquery.add(self.svgDraw.image("{{ url_for('static', filename='img/programming_72x72.png') }}").x(175));
        self.slide.add(xquery);
        xquery.hide().move(250, 250);
        marcXML.animate(2000).dy(40).after(function() {
+        json_ld.hide();
         marc21clone.hide()
-        description.tspan("Step 4. MARC XML is converted to BIBFRAME RDF XML").newLine()
+        description.tspan("Step 4. MARC21 converted to MARCXML, MARCXML is transformed to BIBFRAME RDF XML").newLine()
         description.tspan("    through LOC's marc2bibframe XQuery utility").newLine()
         xquery.show();
         marcXML.animate(2000).dmove(40, 80).after(function() {
@@ -344,13 +352,13 @@
          self.slide.add(bfRDF);
          // bfRDF.add(self.svgDraw.rect(110, 90).stroke({ width: 1 }).fill({ color: '#FFFFFF'}));
          bfRDF.add(self.svgDraw.image("{{ url_for('static', filename='img/bibframe-newlogo.jpg') }}").scale(0.7, 0.7));
-         bfRDF.add(self.svgDraw.text("RDF-XML File").move(5, 50));
+         bfRDF.add(self.svgDraw.text("RDF-XML File").move(5, 110).font({ size: 18 }));
          bfRDF.move(300, 250);
          marcXML.hide();
          bfRDF.animate(2000).dmove(40, 40).after(function() { 
           xquery.hide(); 
-          description.tspan("Step 5. BIBFRAME resource graphs extracted").newLine();
-          description.tspan("  and ingested into Fedora4").newLine();
+          description.tspan("Step 5. BIBFRAME resource graphs extracted and ingested").newLine();
+          description.tspan("  into Fedora4 and then indexed into Elasticsearch").newLine();
           bfRDF.backward();
           fedoraRepo.backward();
           var person = self.svgDraw.group();
@@ -359,15 +367,21 @@
           person.add(self.svgDraw.text("bf:Person RDF").move(5, 100));
           person.move(300, 300).animate(1000).dx(200).after(function() { 
             person.animate(1000).dy(-100).after(function() { 
-              person.dx(65).animate(1000).scale(0.6, 0.6) });
+              person.dx(65).animate(1000).scale(0.6, 0.6);
+              json_ld.dy(-200);
+              json_ld.show().animate(1500).dy(200).after(function() {
+                json_ld.hide();
+              });
+            });
           });
           var work = self.svgDraw.group();
           self.slide.add(work);
           work.add(self.svgDraw.image("{{ url_for('static', filename='img/Work.png') }}"));
           work.add(self.svgDraw.text("bf:Work RDF").move(5, 100));
-          work.move(300, 400).animate(1000).dx(200).after(function() { 
+          work.move(300, 420).animate(1000).dx(200).after(function() { 
             work.animate(1000).dy(-100).after(function() { 
-              work.dx(120).animate(1000).scale(0.6, 0.6) });
+              work.dx(120).animate(1000).scale(0.6, 0.6)
+           });
           });
  
          });
@@ -382,14 +396,15 @@
   }
 
   self.finalThoughts = function() {
-    self.thought = self.svgDraw.text('Functionality is "pulled" from community requirements');
+    self.thought = self.svgDraw.text('Functionality is "pulled"\nfrom community requirements');
     self.thought.font({ size: 36, family: 'Sans-serif'});
+    self.thought.x(650);
     self.slide.add(self.thought);
-    self.thought.animate(1000).move(25, 100).after(function() {;
-     self.thought.text("Catalog shifts from system to platform");
-     self.thought.animate(1000).scale(1.5, 1.5).after(function() {
+    self.thought.animate(1500).move(25, 100).after(function() {;
+     self.thought.text("Catalog shifts from\nsystem to platform");
+     self.thought.animate(1500).scale(1.5, 1.5).after(function() {
        self.thought.text("Reclaim your Catalog!");
-       self.thought.animate(1000).dx(20).after(function() {
+       self.thought.animate(1500).dx(20).after(function() {
          self.thought.text("Thank-you!");
          self.thought.dx(150);
          var info = self.svgDraw.text(function(add) {
@@ -399,7 +414,7 @@
             add.tspan("email: jeremy.nelson@coloradocollege.edu").newLine()
             add.tspan("twitter: @jermnelson").newLine()
           });
-         info.font({ size: 18 }).fill({ color: '#0000FF' });
+         info.font({ size: 22 }).fill({ color: '#0000FF' });
          info.move(self.thought.x()+120, 250);
          self.slide.add(info);
        });
