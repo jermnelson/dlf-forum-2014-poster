@@ -24,7 +24,7 @@
                                               ></span></div>
   <div class="btn-group-vertical center-block">
    <button type="button" class="btn btn-success"
-       data-bind="click: startPresentation">
+       data-bind="click: startPresentation, enable: notRunning">
      <i class="glyphicon glyphicon-play"></i>
      Start</button>
    <a type="button" class="btn btn-warning" href="{{ url_for('static', filename='pdf/poster.pdf') }}">
@@ -87,6 +87,8 @@
   self.svgDraw = SVG('presentation').size(800, 600);
 
   self.slide = self.svgDraw.group();
+
+  self.notRunning = ko.observable(true);
 
   self.posterView = function()  {
    self.slide.clear();
@@ -424,6 +426,7 @@
   }
 
   self.startPresentation = function() {
+   self.notRunning(false);
    self.counter(60);
    self.counterColor('green');
       self.countdownTimer = setInterval(self.updateCounter, 1000); 
@@ -475,7 +478,7 @@
    }
    if(self.counter() == 0) {
     clearInterval(self.countdownTimer);
-
+    self.notRunning(true);
    }   
   }
 
